@@ -2,7 +2,7 @@ import pygame
 
 
 class Laser(pygame.sprite.Sprite):
-    def __init__(self, pos, screen_height, speed = -8):
+    def __init__(self, pos, screen_height, speed=-8):
         super().__init__()
         self.image = pygame.Surface((4, 20))
         self.image.fill('white')
