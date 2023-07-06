@@ -2,8 +2,8 @@ import pygame
 import sys
 from player import Player
 import obstacle
-from alien import Alien
-from random import choice
+from alien import Alien, Extra
+from random import choice, randint
 from laser import Laser
 
 
@@ -24,6 +24,9 @@ class Game:
         self.create_aliens(rows=6, cols=8)
 
         self.alien_lasers = pygame.sprite.Group()
+
+        self.alien_extra = pygame.sprite.GroupSingle()
+        self.alien_extra_spawn_time = randint(400, 800)
 
     def create_multiple_obstacle(self, *offset, start_x, start_y, ):
         for offset_x in offset:
@@ -74,11 +77,19 @@ class Game:
             laser_sprite = Laser(random_alien.rect.center, screen_height, 6)
             self.alien_lasers.add(laser_sprite)
 
+    def check_update_spawn_extra(self):
+        self.alien_extra_spawn_time -= 1
+        if self.alien_extra_spawn_time <= 0:
+            self.alien_extra.add(Extra(choice(['right', 'left']), screen_width))
+            self.alien_extra_spawn_time = randint(400, 800)
+
     def run(self):
         self.player.update()
         self.aliens.update(self.alien_speed)
+        self.alien_extra.update()
 
         self.check_alien_position()
+        self.check_update_spawn_extra()
         self.alien_lasers.update()
 
         self.player.sprite.lasers.draw(screen)
@@ -86,6 +97,7 @@ class Game:
         self.blocks.draw(screen)
         self.aliens.draw(screen)
         self.alien_lasers.draw(screen)
+        self.alien_extra.draw(screen)
 
 
 if __name__ == '__main__':
