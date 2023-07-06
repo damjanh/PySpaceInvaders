@@ -12,7 +12,9 @@ class Game:
         self.shape = obstacle.shape
         self.block_size = 6
         self.blocks = pygame.sprite.Group()
-        self.create_multiple_obstacle(0, 100, 200, start_x=0, start_y=480)
+        self.obstacle_amount = 4
+        self.obstacle_x_positions = [num * (screen_width / self.obstacle_amount) for num in range(self.obstacle_amount)]
+        self.create_multiple_obstacle(*self.obstacle_x_positions, start_x=screen_width / 15 , start_y=480)
 
     def create_multiple_obstacle(self, *offset, start_x, start_y, ):
         for offset_x in offset:
