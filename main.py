@@ -12,17 +12,21 @@ class Game:
         self.shape = obstacle.shape
         self.block_size = 6
         self.blocks = pygame.sprite.Group()
-        self.create_obstacle()
+        self.create_multiple_obstacle(0, 100, 200, start_x=0, start_y=480)
 
-    def create_obstacle(self):
+    def create_multiple_obstacle(self, *offset, start_x, start_y, ):
+        for offset_x in offset:
+            self.create_obstacle(start_x, start_y, offset_x)
+
+    def create_obstacle(self, start_x, start_y, offset_x):
         for row_index, row in enumerate(self.shape):
             for col_index, col in enumerate(row):
                 if col == 'x':
                     block = obstacle.Block(
                         self.block_size,
                         (241, 79, 80),
-                        col_index * self.block_size,
-                        row_index * self.block_size
+                        start_x + col_index * self.block_size + offset_x,
+                        start_y + row_index * self.block_size
                     )
                     self.blocks.add(block)
 
