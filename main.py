@@ -54,8 +54,15 @@ class Game:
         for alien in self.aliens.sprites():
             if alien.rect.right >= screen_width:
                 self.alien_speed = -1
+                self.alien_move_down(2)
             if alien.rect.left <= 0:
                 self.alien_speed = 1
+                self.alien_move_down(2)
+
+    def alien_move_down(self, distance):
+        if self.aliens:
+            for alien in self.aliens.sprites():
+                alien.rect.y += distance
 
     def run(self):
         self.player.update()
