@@ -5,11 +5,13 @@ from player import Player
 
 class Game:
     def __init__(self):
-        player_sprite = Player((screen_width / 2, screen_height), screen_width, 5)
+        player_sprite = Player((screen_width / 2, screen_height), screen_width, screen_height, 5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
     def run(self):
         self.player.update()
+
+        self.player.sprite.lasers.draw(screen)
         self.player.draw(screen)
 
 
@@ -27,8 +29,8 @@ if __name__ == '__main__':
                 pygame.quit()
                 sys.exit()
 
-            screen.fill((30, 30, 30))
-            game.run()
+        screen.fill((30, 30, 30))
+        game.run()
 
-            pygame.display.flip()
-            clock.tick(60)
+        pygame.display.flip()
+        clock.tick(60)
