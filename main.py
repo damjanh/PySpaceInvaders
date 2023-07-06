@@ -17,6 +17,7 @@ class Game:
         self.obstacle_x_positions = [num * (screen_width / self.obstacle_amount) for num in range(self.obstacle_amount)]
         self.create_multiple_obstacle(*self.obstacle_x_positions, start_x=screen_width / 15, start_y=480)
 
+        self.alien_speed = 1
         self.aliens = pygame.sprite.Group()
         self.create_aliens(rows=6, cols=8)
 
@@ -49,8 +50,17 @@ class Game:
                     alien_sprite = Alien('red', x, y)
                 self.aliens.add(alien_sprite)
 
+    def check_alien_position(self):
+        for alien in self.aliens.sprites():
+            if alien.rect.right >= screen_width:
+                self.alien_speed = -1
+            if alien.rect.left <= 0:
+                self.alien_speed = 1
+
     def run(self):
         self.player.update()
+        self.aliens.update(self.alien_speed)
+        self.check_alien_position()
 
         self.player.sprite.lasers.draw(screen)
         self.player.draw(screen)
