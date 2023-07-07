@@ -103,7 +103,10 @@ class Game:
             for laser in self.alien_lasers:
                 if pygame.sprite.spritecollide(laser, self.player, False):
                     laser.kill()
-                    print('Player died!')
+                    self.lives -= 1
+                    if self.lives <= 0:
+                        pygame.quit()
+                        sys.exit()
 
                 if pygame.sprite.spritecollide(laser, self.blocks, True):
                     laser.kill()
