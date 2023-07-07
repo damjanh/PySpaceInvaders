@@ -34,6 +34,16 @@ class Game:
         self.alien_extra = pygame.sprite.GroupSingle()
         self.alien_extra_spawn_time = randint(400, 800)
 
+        music = pygame.mixer.Sound('audio/music.wav')
+        music.set_volume(0.2)
+        music.play(loops=-1)
+
+        self.explosion = pygame.mixer.Sound('audio/explosion.wav')
+        self.explosion.set_volume(0.2)
+
+        self.laser_sound = pygame.mixer.Sound('audio/laser.wav')
+        self.laser_sound.set_volume(0.2)
+
     def create_multiple_obstacle(self, *offset, start_x, start_y, ):
         for offset_x in offset:
             self.create_obstacle(start_x, start_y, offset_x)
@@ -82,6 +92,7 @@ class Game:
             random_alien = choice(self.aliens.sprites())
             laser_sprite = Laser(random_alien.rect.center, screen_height, 6)
             self.alien_lasers.add(laser_sprite)
+            self.laser_sound.play()
 
     def check_update_spawn_extra(self):
         self.alien_extra_spawn_time -= 1
@@ -96,14 +107,16 @@ class Game:
                     laser.kill()
 
                 aliens_hit = pygame.sprite.spritecollide(laser, self.aliens, True)
-                for alien in aliens_hit:
-                    self.score += alien.score
                 if aliens_hit:
+                    for alien in aliens_hit:
+                        self.score += alien.score
                     laser.kill()
+                    self.explosion.play()
 
                 if pygame.sprite.spritecollide(laser, self.alien_extra, True):
                     self.score += self.alien_extra.sprite.score
                     laser.kill()
+                    self.explosion.play()
 
         if self.alien_lasers:
             for laser in self.alien_lasers:
