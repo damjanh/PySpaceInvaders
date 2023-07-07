@@ -12,6 +12,10 @@ class Game:
         player_sprite = Player((screen_width / 2, screen_height), screen_width, screen_height, 5)
         self.player = pygame.sprite.GroupSingle(player_sprite)
 
+        self.lives = 3
+        self.lives_surface = pygame.image.load('graphics/player.png').convert_alpha()
+        self.life_x_start_position = screen_width - (self.lives_surface.get_size()[0] * 2 + 20)
+
         self.shape = obstacle.shape
         self.block_size = 6
         self.blocks = pygame.sprite.Group()
@@ -112,6 +116,11 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
+    def display_lives(self):
+        for life in range(self.lives - 1):
+            x = self.life_x_start_position + (life * (self.lives_surface.get_size()[0] + 10))
+            screen.blit(self.lives_surface, (x, 8))
+
     def run(self):
         self.player.update()
         self.aliens.update(self.alien_speed)
@@ -121,6 +130,7 @@ class Game:
         self.check_alien_position()
         self.check_update_spawn_extra()
         self.check_collisions()
+        self.display_lives()
 
         self.player.sprite.lasers.draw(screen)
         self.player.draw(screen)
