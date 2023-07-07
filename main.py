@@ -15,6 +15,8 @@ class Game:
         self.lives = 3
         self.lives_surface = pygame.image.load('graphics/player.png').convert_alpha()
         self.life_x_start_position = screen_width - (self.lives_surface.get_size()[0] * 2 + 20)
+        self.score = 0
+        self.font = pygame.font.Font('font/Pixeled.ttf', 20)
 
         self.shape = obstacle.shape
         self.block_size = 6
@@ -124,6 +126,11 @@ class Game:
             x = self.life_x_start_position + (life * (self.lives_surface.get_size()[0] + 10))
             screen.blit(self.lives_surface, (x, 8))
 
+    def display_score(self):
+        score_surface = self.font.render(f'score: {self.score}', False, 'white')
+        score_rect = score_surface.get_rect(topleft=(10, -10))
+        screen.blit(score_surface, score_rect)
+
     def run(self):
         self.player.update()
         self.aliens.update(self.alien_speed)
@@ -133,7 +140,6 @@ class Game:
         self.check_alien_position()
         self.check_update_spawn_extra()
         self.check_collisions()
-        self.display_lives()
 
         self.player.sprite.lasers.draw(screen)
         self.player.draw(screen)
@@ -141,6 +147,9 @@ class Game:
         self.aliens.draw(screen)
         self.alien_lasers.draw(screen)
         self.alien_extra.draw(screen)
+
+        self.display_lives()
+        self.display_score()
 
 
 if __name__ == '__main__':
