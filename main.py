@@ -44,6 +44,8 @@ class Game:
         self.laser_sound = pygame.mixer.Sound('audio/laser.wav')
         self.laser_sound.set_volume(0.2)
 
+        self.game_end = False
+
     def create_multiple_obstacle(self, *offset, start_x, start_y, ):
         for offset_x in offset:
             self.create_obstacle(start_x, start_y, offset_x)
@@ -95,10 +97,11 @@ class Game:
             self.laser_sound.play()
 
     def check_update_spawn_extra(self):
-        self.alien_extra_spawn_time -= 1
-        if self.alien_extra_spawn_time <= 0:
-            self.alien_extra.add(Extra(choice(['right', 'left']), screen_width))
-            self.alien_extra_spawn_time = randint(400, 800)
+        if not self.game_end:
+            self.alien_extra_spawn_time -= 1
+            if self.alien_extra_spawn_time <= 0:
+                self.alien_extra.add(Extra(choice(['right', 'left']), screen_width))
+                self.alien_extra_spawn_time = randint(400, 800)
 
     def check_collisions(self):
         if self.player.sprite.lasers:
@@ -148,6 +151,13 @@ class Game:
         score_rect = score_surface.get_rect(topleft=(10, -10))
         screen.blit(score_surface, score_rect)
 
+    def check_display_victory_message(self):
+        if not self.aliens.sprites():
+            self.game_end = True
+            victory_surface = self.font.render('You won!', False, 'white')
+            victory_rect = victory_surface.get_rect(center=(screen_width / 2, screen_height / 2))
+            screen.blit(victory_surface, victory_rect)
+
     def run(self):
         self.player.update()
         self.aliens.update(self.alien_speed)
@@ -157,6 +167,7 @@ class Game:
         self.check_alien_position()
         self.check_update_spawn_extra()
         self.check_collisions()
+        self.check_display_victory_message()
 
         self.player.sprite.lasers.draw(screen)
         self.player.draw(screen)
